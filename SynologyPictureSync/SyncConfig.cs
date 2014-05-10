@@ -43,7 +43,7 @@ namespace MediaSync
                 return JsonConvert.DeserializeObject<SyncConfig>(fileContents);
             }
             catch (Exception) { }
-            return new SyncConfig();
+            return new SyncConfig { SourceDir=Machine.MyPicturesDirectory, DestinationDir=string.Empty };
         }
 
 

@@ -16,6 +16,12 @@ namespace MediaSync.Extensions
             }
             return input;
         }
+
+        public static bool IsNullOrWhitespace(this string input)
+        {
+            return string.IsNullOrWhiteSpace(input);
+        }
+
         public static string FormatWith(this string format, params object[] args)
         {
             if (format == null)

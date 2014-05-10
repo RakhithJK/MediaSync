@@ -1,12 +1,8 @@
-﻿using System;
+﻿using MediaSync.Extensions;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MediaSync.Extensions;
 
@@ -17,7 +13,7 @@ namespace MediaSync
         public Form1()
         {
             InitializeComponent();
-            Sync();
+            SetSyncCommandEnabledIfConfigValid();
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -27,7 +23,14 @@ namespace MediaSync
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var options = new FormOptions();
+            options.OptionsUpdated += ConfigChangedEvent;
+            options.Show();
+        }
 
+        public void ConfigChangedEvent(object sender, EventArgs e)
+        {
+            SetSyncCommandEnabledIfConfigValid();
         }
 
         private void syncNowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -35,13 +38,16 @@ namespace MediaSync
             Sync();
         }
 
-        private string MyPicturesDirectory
+        private void SetSyncCommandEnabledIfConfigValid()
         {
-            get { return Environment.GetFolderPath(Environment.SpecialFolder.MyPictures); }
+            
+            var syncConfig = SyncConfig.CreateFromFile();
+            ConfigValidCheckResult validConfig = CreateMissingConfigMessage(syncConfig);
+            contextMenuStrip1.Items["syncNowToolStripMenuItem"].Enabled = (validConfig.HasValidConfig);            
         }
 
         /// <summary>
-        /// Builds the target directory in the user's pref. Like year/monthname/date/file.jpg
+        /// Builds the target file path directory in the user's pref. Like year/monthname/date/file.jpg
         /// </summary>
         /// <param name="task"></param>
         /// <returns></returns>
@@ -54,9 +60,26 @@ namespace MediaSync
                 System.IO.Path.GetFileName(task.SourceFile)
             };
 
-            string targetPath = Path.Combine(pathParts.ToArray());
+            return Path.Combine(pathParts.ToArray());
+        }
 
-            return targetPath;
+        private ConfigValidCheckResult CreateMissingConfigMessage(SyncConfig config)
+        {
+            var result = new ConfigValidCheckResult { HasValidConfig=true};
+            
+            if (config.DestinationDir.IsNullOrWhitespace())
+            {
+                result.Message += "There isn't a destination media directory defined." + Environment.NewLine;
+                result.HasValidConfig = false;
+            }
+
+            if (config.SourceDir.IsNullOrWhitespace())
+            {
+                result.Message += "There isn't a source media directory defined." + Environment.NewLine;
+                result.HasValidConfig = false;
+            }
+
+            return result;
         }
 
         private void Sync()
@@ -64,11 +87,19 @@ namespace MediaSync
             //load options
             var syncConfig = SyncConfig.CreateFromFile();
 
+            ConfigValidCheckResult validConfig = CreateMissingConfigMessage(syncConfig);
+            if (validConfig.HasValidConfig==false)
+            {
+                MessageBox.Show(validConfig.Message);
+                optionsToolStripMenuItem_Click(null, null);
+                return;
+            }
+
             //perform the sync
             try
             {
                 var fileSync = new FileSyncer();
-                syncConfig.SourceDir = syncConfig.SourceDir.Or(MyPicturesDirectory);
+                syncConfig.SourceDir = syncConfig.SourceDir.Or(Machine.MyPicturesDirectory);
                 syncConfig.DestinationDir = syncConfig.DestinationDir.Or(@"x:\");
                 List<CopyTask> copyTasks = fileSync.FindFileCopyTasks(new DirectoryInfo(syncConfig.SourceDir)).ToList();
                 foreach (var item in copyTasks)
@@ -81,14 +112,13 @@ namespace MediaSync
 
                 if (syncConfig.ShouldDeleteSourceWhenSuccessfullyCompleted)
                 {
-                    foreach (var item in copyTasks.Where(x=>x.WasCopiedSuccessfully))
+                    foreach (var item in copyTasks.Where(x => x.WasCopiedSuccessfully))
                     {
                         string dir = Path.GetDirectoryName(item.SourceFile);
                         File.Delete(item.SourceFile);
                         DeleteDirectoryIfEmpty(dir);
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -99,14 +129,12 @@ namespace MediaSync
         private void DeleteDirectoryIfEmpty(string dir)
         {
             DirectoryInfo di = new DirectoryInfo(dir);
-            if(di.GetFiles().Count()==0 && di.GetDirectories().Count()==0)
+            if (di.GetFiles().Count() == 0 && di.GetDirectories().Count() == 0)
             {
-             //   di.Delete();
+                //   di.Delete();
 
             }
         }
-
-
 
     }
 }
