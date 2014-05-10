@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MediaSync.Extensions;
-
+ 
 namespace MediaSync
 {
     public partial class FormTray : Form
@@ -81,8 +80,14 @@ namespace MediaSync
             return result;
         }
 
+        private void ShowBalloon(string msg)
+        {
+            notifyIcon1.ShowBalloonTip(timeout: 7, tipTitle: "Media Sync", tipText: msg, tipIcon: ToolTipIcon.None);
+        }
+
         private void Sync()
         {
+            ShowBalloon("Finding items...");
             //load options
             var syncConfig = SyncConfig.CreateFromFile();
 
@@ -93,19 +98,19 @@ namespace MediaSync
                 optionsToolStripMenuItem_Click(null, null);
                 return;
             }
-
+            //"jpg|png|avi|mov".Split("|".ToCharArray())
             //perform the sync
             try
             {
                 var fileSync = new FileSyncer();
-                syncConfig.SourceDir = syncConfig.SourceDir.Or(Machine.MyPicturesDirectory);
-                syncConfig.DestinationDir = syncConfig.DestinationDir.Or(@"x:\");
-                List<CopyTask> copyTasks = fileSync.FindFileCopyTasks(new DirectoryInfo(syncConfig.SourceDir)).ToList();
+              
+                List<CopyTask> copyTasks = fileSync.FindFileCopyTasks(new DirectoryInfo(syncConfig.SourceDir), syncConfig.FileExtensions).ToList();
                 foreach (var item in copyTasks)
                 {
                     string targetDirFile = DetermineTargetDir(item);
                     item.DestinationFile = Path.Combine(syncConfig.DestinationDir, targetDirFile);
                 }
+                ShowBalloon("Copying {0} items...".FormatWith(copyTasks.Count));
 
                 fileSync.ExecuteFileCopyTasks(copyTasks);
 
@@ -118,6 +123,7 @@ namespace MediaSync
                         DeleteDirectoryIfEmpty(dir);
                     }
                 }
+                ShowBalloon(CreateCompletedMessage(copyTasks , syncConfig.DestinationDir));
             }
             catch (Exception)
             {
@@ -125,12 +131,24 @@ namespace MediaSync
             }
         }
 
+        private string CreateCompletedMessage(IEnumerable<CopyTask> copyTasks, string targetDir)
+        {
+            int numCopied = copyTasks.Count(x=>x.WasCopiedSuccessfully);
+            return "Done. {0} file{1} copied to {2}".FormatWith(numCopied,
+                (numCopied>1)?"s":"",
+                targetDir);
+        }
+
+        /// <summary>
+        /// Deletes a directory if it's empty. A nice courtesy for the user.
+        /// </summary>
+        /// <param name="dir"></param>
         private void DeleteDirectoryIfEmpty(string dir)
         {
-            DirectoryInfo di = new DirectoryInfo(dir);
+            DirectoryInfo di = new DirectoryInfo(dir);            
             if (di.GetFiles().Count() == 0 && di.GetDirectories().Count() == 0)
             {
-                //   di.Delete();
+                di.Delete();
             }
         }
     }

@@ -1,22 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MediaSync.Extensions
 {
     public static class StringExtensions
-    {
-        public static string Or(this string input, string alternate)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return alternate;
-            }
-            return input;
-        }
-
+    {      
         public static bool IsNullOrWhitespace(this string input)
         {
             return string.IsNullOrWhiteSpace(input);

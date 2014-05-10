@@ -14,7 +14,11 @@ namespace MediaSync
         public string SourceDir { get; set; }
         public string DestinationDir { get; set; }
         public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
-
+        
+        /// <summary>
+        /// File extensions to filter for sync. When empty, sync none.
+        /// </summary>
+        public List<string> FileExtensions { get; set; }
 
         const string SaveFile = @"SyncConfig.json";
         public SyncConfig()
@@ -43,10 +47,7 @@ namespace MediaSync
                 return JsonConvert.DeserializeObject<SyncConfig>(fileContents);
             }
             catch (Exception) { }
-            return new SyncConfig { SourceDir=Machine.MyPicturesDirectory, DestinationDir=string.Empty };
-        }
-
-
-
+            return new SyncConfig { SourceDir = Machine.MyPicturesDirectory, DestinationDir = string.Empty, FileExtensions = new List<string>{"jpg","png","avi","mov"} };
+        }    
     }
 }

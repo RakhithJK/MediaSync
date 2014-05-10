@@ -39,12 +39,14 @@
             this.txtDestinationDir = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.lblMsg = new System.Windows.Forms.Label();
+            this.txtFileExtensions = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(381, 132);
+            this.btnSave.Location = new System.Drawing.Point(381, 169);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 0;
@@ -95,7 +97,7 @@
             // btnBrowseDest
             // 
             this.btnBrowseDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseDest.Location = new System.Drawing.Point(426, 86);
+            this.btnBrowseDest.Location = new System.Drawing.Point(426, 81);
             this.btnBrowseDest.Name = "btnBrowseDest";
             this.btnBrowseDest.Size = new System.Drawing.Size(30, 23);
             this.btnBrowseDest.TabIndex = 7;
@@ -107,7 +109,7 @@
             // 
             this.txtDestinationDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDestinationDir.Location = new System.Drawing.Point(154, 88);
+            this.txtDestinationDir.Location = new System.Drawing.Point(154, 83);
             this.txtDestinationDir.Name = "txtDestinationDir";
             this.txtDestinationDir.Size = new System.Drawing.Size(266, 20);
             this.txtDestinationDir.TabIndex = 6;
@@ -116,7 +118,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(43, 91);
+            this.label2.Location = new System.Drawing.Point(43, 86);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(105, 13);
             this.label2.TabIndex = 5;
@@ -126,17 +128,37 @@
             // 
             this.lblMsg.AutoSize = true;
             this.lblMsg.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.lblMsg.Location = new System.Drawing.Point(12, 132);
+            this.lblMsg.Location = new System.Drawing.Point(12, 156);
             this.lblMsg.Name = "lblMsg";
             this.lblMsg.Size = new System.Drawing.Size(36, 13);
             this.lblMsg.TabIndex = 8;
             this.lblMsg.Text = "lblmsg";
             // 
+            // txtFileExtensions
+            // 
+            this.txtFileExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFileExtensions.Location = new System.Drawing.Point(154, 118);
+            this.txtFileExtensions.Name = "txtFileExtensions";
+            this.txtFileExtensions.Size = new System.Drawing.Size(266, 20);
+            this.txtFileExtensions.TabIndex = 10;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(71, 121);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(77, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "File Extensions";
+            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 167);
+            this.ClientSize = new System.Drawing.Size(468, 204);
+            this.Controls.Add(this.txtFileExtensions);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.lblMsg);
             this.Controls.Add(this.btnBrowseDest);
             this.Controls.Add(this.txtDestinationDir);
@@ -169,5 +191,7 @@
         private System.Windows.Forms.TextBox txtDestinationDir;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblMsg;
+        private System.Windows.Forms.TextBox txtFileExtensions;
+        private System.Windows.Forms.Label label3;
     }
 }

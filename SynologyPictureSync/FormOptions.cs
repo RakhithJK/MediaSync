@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Windows.Forms;
 
@@ -8,6 +9,8 @@ namespace MediaSync
     {
         public event EventHandler OptionsUpdated;
 
+        private const string ExtensionSeparator = " ";
+
         public FormOptions()
         {
             InitializeComponent();
@@ -15,14 +18,14 @@ namespace MediaSync
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-
-            CleanDirOptions();
+            SetDefaultsWhenEmpty();
 
             var syncConfig = new SyncConfig
             {
                 DestinationDir = txtDestinationDir.Text.Trim(),
                 SourceDir = txtSourceDir.Text.Trim(),
-                ShouldDeleteSourceWhenSuccessfullyCompleted = chkDeleteSourceAfterCopy.Checked
+                ShouldDeleteSourceWhenSuccessfullyCompleted = chkDeleteSourceAfterCopy.Checked,
+                FileExtensions = txtFileExtensions.Text.Trim().Split(ExtensionSeparator.ToCharArray(),StringSplitOptions.RemoveEmptyEntries).ToList()
             };
             syncConfig.Save();
             this.Close();
@@ -30,12 +33,12 @@ namespace MediaSync
 
         }
 
-        private void CleanDirOptions()
+        private void SetDefaultsWhenEmpty()
         {
             if (txtSourceDir.Text.Trim().Length == 0)
             {
                 txtSourceDir.Text = Machine.MyPicturesDirectory;
-            }
+            }            
         }
 
         private bool CanReadDir(string dir)
@@ -76,6 +79,7 @@ namespace MediaSync
         {
             txtSourceDir.Text = syncConfig.SourceDir.Trim();
             txtDestinationDir.Text = syncConfig.DestinationDir.Trim();
+            txtFileExtensions.Text = string.Join(ExtensionSeparator, syncConfig.FileExtensions);
             chkDeleteSourceAfterCopy.Checked = syncConfig.ShouldDeleteSourceWhenSuccessfullyCompleted;
         }
 
