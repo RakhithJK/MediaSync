@@ -8,9 +8,9 @@ using MediaSync.Extensions;
 
 namespace MediaSync
 {
-    public partial class Form1 : Form
+    public partial class FormTray : Form
     {
-        public Form1()
+        public FormTray()
         {
             InitializeComponent();
             SetSyncCommandEnabledIfConfigValid();
@@ -40,7 +40,6 @@ namespace MediaSync
 
         private void SetSyncCommandEnabledIfConfigValid()
         {
-            
             var syncConfig = SyncConfig.CreateFromFile();
             ConfigValidCheckResult validConfig = CreateMissingConfigMessage(syncConfig);
             contextMenuStrip1.Items["syncNowToolStripMenuItem"].Enabled = (validConfig.HasValidConfig);            
@@ -132,9 +131,7 @@ namespace MediaSync
             if (di.GetFiles().Count() == 0 && di.GetDirectories().Count() == 0)
             {
                 //   di.Delete();
-
             }
         }
-
     }
 }

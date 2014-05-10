@@ -49,11 +49,11 @@
   <ItemGroup>
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="FileSystemWatcher.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="FormTray.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FormTray.Designer.cs">
+      <DependentUpon>FormTray.cs</DependentUpon>
     </Compile>
     <Compile Include="FormOptions.cs">
       <SubType>Form</SubType>
@@ -68,8 +68,8 @@
     <Compile Include="FileSyncer.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="SyncConfig.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="FormTray.resx">
+      <DependentUpon>FormTray.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormOptions.resx">
       <DependentUpon>FormOptions.cs</DependentUpon>
