@@ -11,6 +11,11 @@ namespace MediaSync
     [Serializable]
     public class SyncConfig
     {
+        public string SourceDir { get; set; }
+        public string DestinationDir { get; set; }
+        public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
+
+
         const string SaveFile = @"SyncConfig.json";
         public SyncConfig()
         {
@@ -40,6 +45,7 @@ namespace MediaSync
             catch (Exception) { }
             return new SyncConfig();
         }
+
 
 
     }
