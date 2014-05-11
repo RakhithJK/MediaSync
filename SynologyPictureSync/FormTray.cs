@@ -134,7 +134,7 @@ namespace MediaSync
         private string CreateCompletedMessage(IEnumerable<CopyTask> copyTasks, string targetDir)
         {
             int numCopied = copyTasks.Count(x=>x.WasCopiedSuccessfully);
-            return "Done. {0} file{1} copied to {2}".FormatWith(numCopied,
+            return "Done. {0} file{1} sync'd to {2}".FormatWith(numCopied,
                 (numCopied>1)?"s":"",
                 targetDir);
         }
