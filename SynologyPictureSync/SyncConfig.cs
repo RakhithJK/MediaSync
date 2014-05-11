@@ -11,6 +11,7 @@ namespace MediaSync
     [Serializable]
     public class SyncConfig
     {
+        public static string[] DefaultFileExtensions = new[] { "jpg", "png", "avi", "mov", "mp4" };
         public string SourceDir { get; set; }
         public string DestinationDir { get; set; }
         public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
@@ -24,7 +25,7 @@ namespace MediaSync
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"MediaSync\SyncConfig.json");
+                return Path.Combine(Machine.AppDataDirectory, @"MediaSync\SyncConfig.json");
             }
         }
 
@@ -58,7 +59,7 @@ namespace MediaSync
                 {
                     SourceDir = Machine.MyPicturesDirectory,
                     DestinationDir = string.Empty,
-                    FileExtensions = new List<string> { "jpg", "png", "avi", "mov", "mp4" }
+                    FileExtensions = DefaultFileExtensions.ToList()
                 };
             }
         }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MediaSync
 {
@@ -11,6 +7,11 @@ namespace MediaSync
         public static string MyPicturesDirectory
         {
             get { return Environment.GetFolderPath(Environment.SpecialFolder.MyPictures); }
+        }
+
+        public static string AppDataDirectory
+        {
+            get { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData); }
         }
     }
 }

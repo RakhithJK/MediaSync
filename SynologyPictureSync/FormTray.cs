@@ -98,8 +98,7 @@ namespace MediaSync
                 optionsToolStripMenuItem_Click(null, null);
                 return;
             }
-            //"jpg|png|avi|mov".Split("|".ToCharArray())
-            //perform the sync
+          
             try
             {
                 var fileSync = new FileSyncer();
