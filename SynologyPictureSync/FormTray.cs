@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
- 
+
 namespace MediaSync
 {
     public partial class FormTray : Form
@@ -41,7 +41,7 @@ namespace MediaSync
         {
             var syncConfig = SyncConfig.CreateFromFile();
             ConfigValidCheckResult validConfig = CreateMissingConfigMessage(syncConfig);
-            contextMenuStrip1.Items["syncNowToolStripMenuItem"].Enabled = (validConfig.HasValidConfig);            
+            contextMenuStrip1.Items["syncNowToolStripMenuItem"].Enabled = (validConfig.HasValidConfig);
         }
 
         /// <summary>
@@ -51,10 +51,12 @@ namespace MediaSync
         /// <returns></returns>
         private string DetermineTargetDir(CopyTask task)
         {
+            DateTime targetDate = task.ImageTakenOnDate.GetValueOrDefault(task.FileCreatedOn);
+
             List<string> pathParts = new List<string>{
-                task.CreatedOn.Year.ToString(),
-                task.CreatedOn.ToShortMonthName(),
-                task.CreatedOn.Day.ToString(),
+                targetDate.Year.ToString(),
+                targetDate.ToShortMonthName(),
+                targetDate.Day.ToString(),
                 System.IO.Path.GetFileName(task.SourceFile)
             };
 
@@ -63,8 +65,8 @@ namespace MediaSync
 
         private ConfigValidCheckResult CreateMissingConfigMessage(SyncConfig config)
         {
-            var result = new ConfigValidCheckResult { HasValidConfig=true};
-            
+            var result = new ConfigValidCheckResult { HasValidConfig = true };
+
             if (config.DestinationDir.IsNullOrWhitespace())
             {
                 result.Message += "There isn't a destination media directory defined." + Environment.NewLine;
@@ -92,17 +94,17 @@ namespace MediaSync
             var syncConfig = SyncConfig.CreateFromFile();
 
             ConfigValidCheckResult validConfig = CreateMissingConfigMessage(syncConfig);
-            if (validConfig.HasValidConfig==false)
+            if (validConfig.HasValidConfig == false)
             {
                 MessageBox.Show(validConfig.Message);
                 optionsToolStripMenuItem_Click(null, null);
                 return;
             }
-          
+
             try
             {
                 var fileSync = new FileSyncer();
-              
+
                 List<CopyTask> copyTasks = fileSync.FindFileCopyTasks(new DirectoryInfo(syncConfig.SourceDir), syncConfig.FileExtensions).ToList();
                 foreach (var item in copyTasks)
                 {
@@ -122,7 +124,7 @@ namespace MediaSync
                         DeleteDirectoryIfEmpty(dir);
                     }
                 }
-                ShowBalloon(CreateCompletedMessage(copyTasks , syncConfig.DestinationDir));
+                ShowBalloon(CreateCompletedMessage(copyTasks, syncConfig.DestinationDir));
             }
             catch (Exception)
             {
@@ -132,9 +134,9 @@ namespace MediaSync
 
         private string CreateCompletedMessage(IEnumerable<CopyTask> copyTasks, string targetDir)
         {
-            int numCopied = copyTasks.Count(x=>x.WasCopiedSuccessfully);
+            int numCopied = copyTasks.Count(x => x.WasCopiedSuccessfully);
             return "Done. {0} file{1} sync'd to {2}".FormatWith(numCopied,
-                (numCopied>1)?"s":"",
+                (numCopied > 1) ? "s" : "",
                 targetDir);
         }
 
@@ -144,7 +146,7 @@ namespace MediaSync
         /// <param name="dir"></param>
         private void DeleteDirectoryIfEmpty(string dir)
         {
-            DirectoryInfo di = new DirectoryInfo(dir);            
+            DirectoryInfo di = new DirectoryInfo(dir);
             if (di.GetFiles().Count() == 0 && di.GetDirectories().Count() == 0)
             {
                 di.Delete();
