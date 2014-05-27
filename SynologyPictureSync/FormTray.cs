@@ -152,5 +152,11 @@ namespace MediaSync
                 di.Delete();
             }
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormAbout about = new FormAbout();
+            about.Show();
+        }
     }
 }

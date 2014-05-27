@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="FormTray.cs">
       <SubType>Form</SubType>
@@ -68,6 +74,9 @@
     <Compile Include="FileSyncer.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="SyncConfig.cs" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormTray.resx">
       <DependentUpon>FormTray.cs</DependentUpon>
     </EmbeddedResource>
@@ -101,6 +110,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Media\camera.ico" />
     <Content Include="readme.html">
       <DependentUpon>readme.md</DependentUpon>
     </Content>

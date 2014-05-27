@@ -1,5 +1,5 @@
 #download the binary
-$mediaSyncDownloadUrl = "https://github.com/philoushka/MediaSync/releases/download/1/MediaSync.exe"
+$mediaSyncDownloadUrl = "https://github.com/philoushka/MediaSync/releases/download/0.2/MediaSync.exe"
 $mediaSyncLocationDir = "C:\Program Files (x86)\MediaSync\"
 $file = "MediaSync.exe"
 $mediaSyncLocalFullPath = $mediaSyncLocationDir + $file
