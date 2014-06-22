@@ -42,27 +42,7 @@ namespace MediaSync
             }
         }
 
-        private bool CanReadDir(string dir)
-        {
-            try
-            {
-                Directory.GetFiles(dir);
-                return true;
-            }
-            catch (Exception) { return false; }
-        }
-
-        private bool CanWriteDir(string dir)
-        {
-            try
-            {
-                using (FileStream fs = File.Create(Path.Combine(dir, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
-                { }
-
-                return true;
-            }
-            catch (Exception) { return false; }
-        }
+      
 
         private void FormOptions_Load(object sender, EventArgs e)
         {
@@ -103,7 +83,7 @@ namespace MediaSync
                 return;
             }
 
-            bool canRead = CanReadDir(txtSourceDir.Text);
+            bool canRead = FileIOHelper.CanReadDir(txtSourceDir.Text);
             if (canRead == false)
             {
                 lblMsg.Text = "You don't have read permissions on the source directory.";
@@ -129,7 +109,7 @@ namespace MediaSync
                 txtDestinationDir.Focus();
                 return;
             }
-            bool canWrite = CanWriteDir(txtDestinationDir.Text);
+            bool canWrite = FileIOHelper.CanWriteDir(txtDestinationDir.Text);
             if (canWrite == false)
             {
                 lblMsg.Text = "We can't write to the destination directory. Please check that you have permissions.";

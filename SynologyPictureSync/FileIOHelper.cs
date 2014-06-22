@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MediaSync.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MediaSync.Extensions;
 
 namespace MediaSync
 {
@@ -43,13 +43,34 @@ namespace MediaSync
         /// <param name="msg"></param>
         public static void WriteToErrLog(string msg)
         {
-            msg = "{0}\t{1}".FormatWith(DateTime.Now.ToString("yyyy-MMM-dd HH:mm") ,msg); 
+            msg = "{0}\t{1}".FormatWith(DateTime.Now.ToString("yyyy-MMM-dd HH:mm"), msg);
             using (var file = File.AppendText(ErrLogFile))
             {
                 file.Write(msg);
             }
         }
 
+        public static bool CanReadDir(string dir)
+        {
+            try
+            {
+                Directory.GetFiles(dir);
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
+
+        public static bool CanWriteDir(string dir)
+        {
+            try
+            {
+                using (FileStream fs = File.Create(Path.Combine(dir, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
+                { }
+
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
 
         public static string ErrLogFile { get { return Path.Combine(AppDir, "ErrorLog.txt"); } }
         public static string AppDir { get { return Path.Combine(Machine.AppDataDirectory, Assembly.GetEntryAssembly().GetName().Name); } }
