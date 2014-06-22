@@ -65,15 +65,15 @@ namespace MediaSync
                         if (FileIOHelper.FileSizesAreSame(item.SourceFile, item.DestinationFile))
                         {
                             item.CopyStatus = "File Already Exists With Same Size";
-                            syncResult.AlreadyExistedCount += 1;
+                            syncResult.AlreadyExistedCount += 1; 
+                            continue;
                         }
                         else
                         {
                             item.CopyStatus = "File Already Exists - Different Sizes. Trying another .";
                             item.DestinationFile = ModifyDestinationFileNameForExistingSizeMismatch(item.DestinationFile);
                             syncResult.CopiedButAlreadyExistedDiffSizeCount += 1;
-                        }
-                        continue;
+                        }                       
                     }
                     File.Copy(item.SourceFile, item.DestinationFile);
                     item.FileCopiedOn = DateTime.Now;
