@@ -13,6 +13,7 @@ namespace MediaSync
         public string SourceDir { get; set; }
         public string DestinationDir { get; set; }
         public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
+        public bool ShouldWarnOnDelete { get; set; }
 
         /// <summary>
         /// File extensions to filter for sync. When empty, sync none.

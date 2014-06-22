@@ -9,7 +9,7 @@ namespace MediaSync
     {
         public event EventHandler OptionsUpdated;
 
-        private const string ExtensionSeparator = ",;. ";
+        private const string ExtensionSeparators = ",;. ";
 
         public FormOptions()
         {
@@ -25,7 +25,8 @@ namespace MediaSync
                 DestinationDir = txtDestinationDir.Text.Trim(),
                 SourceDir = txtSourceDir.Text.Trim(),
                 ShouldDeleteSourceWhenSuccessfullyCompleted = chkDeleteSourceAfterCopy.Checked,
-                FileExtensions = txtFileExtensions.Text.Trim().Split(ExtensionSeparator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList()
+                ShouldWarnOnDelete = chkWarnOnDelete.Checked,
+                FileExtensions = txtFileExtensions.Text.Trim().Split(ExtensionSeparators.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList()
             };
             syncConfig.Save();
             this.Close();
@@ -80,8 +81,9 @@ namespace MediaSync
         {
             txtSourceDir.Text = syncConfig.SourceDir.Trim();
             txtDestinationDir.Text = syncConfig.DestinationDir.Trim();
-            txtFileExtensions.Text = string.Join(ExtensionSeparator, syncConfig.FileExtensions);
+            txtFileExtensions.Text = string.Join(" ", syncConfig.FileExtensions);
             chkDeleteSourceAfterCopy.Checked = syncConfig.ShouldDeleteSourceWhenSuccessfullyCompleted;
+            chkWarnOnDelete.Checked = syncConfig.ShouldWarnOnDelete;
         }
 
         private void SourceLeave(object sender, EventArgs e)
@@ -132,7 +134,6 @@ namespace MediaSync
             {
                 lblMsg.Text = "We can't write to the destination directory. Please check that you have permissions.";
                 txtDestinationDir.Focus();
-
             }
             btnSave.Enabled = canWrite;
         }

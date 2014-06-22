@@ -122,13 +122,8 @@ namespace MediaSync
 
                 SyncCopyResult copyResult = fileSync.ExecuteFileCopyTasks(copyTasks);
 
-                if (syncConfig.ShouldDeleteSourceWhenSuccessfullyCompleted)
-                {
-                    foreach (var item in copyTasks.Where(x => x.CopyResult == CopyResult.CopiedSuccessfully || x.CopyResult == CopyResult.AlreadyExisted))
-                    {
-                        DeleteSuccessfullyCopiedSourceItem(item.SourceFile);
-                    }
-                }
+                DeleteSourceFilesIfRequired(syncConfig, copyTasks);
+
                 ShowCompletionBalloon(copyResult, syncConfig.DestinationDir);
 
             }
@@ -138,7 +133,21 @@ namespace MediaSync
                 ShowBalloon("Sorry we had a problem when syncing. The log file has more details. " + FileIOHelper.ErrLogFile, 10);
             }
         }
+        private void DeleteSourceFilesIfRequired(SyncConfig syncConfig, IEnumerable<CopyTask> copyTasks)
+        {
+            if (syncConfig.ShouldDeleteSourceWhenSuccessfullyCompleted)
+            {
+                DialogResult shouldContinue = MessageBox.Show(text: "Ready to delete source files on {0}?".FormatWith(syncConfig.SourceDir), caption: "MediaSync", buttons: MessageBoxButtons.YesNo);
 
+                if (shouldContinue == DialogResult.Yes)
+                {
+                    foreach (var item in copyTasks.Where(x => x.CopyResult == CopyResult.CopiedSuccessfully || x.CopyResult == CopyResult.AlreadyExisted))
+                    {
+                        DeleteSuccessfullyCopiedSourceItem(item.SourceFile);
+                    }
+                }
+            }
+        }
         private void ShowCompletionBalloon(SyncCopyResult result, string targetDir)
         {
             string completionMessage = CreateCompletedMessage(result, targetDir);
