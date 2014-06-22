@@ -1,0 +1,64 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace MediaSync
+{
+    [Serializable]
+    public class SyncConfig
+    {
+        public static string[] DefaultFileExtensions = new[] { "jpg", "png", "avi", "mov", "mp4" };
+        public string SourceDir { get; set; }
+        public string DestinationDir { get; set; }
+        public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
+
+        /// <summary>
+        /// File extensions to filter for sync. When empty, sync none.
+        /// </summary>
+        public List<string> FileExtensions { get; set; }
+
+        private static string SaveFile
+        {
+            get
+            {
+                return Path.Combine(FileIOHelper.AppDir, "SyncConfig.json");
+            }
+        }
+
+        public SyncConfig() { }
+
+        public void Save()
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(this);
+                Directory.CreateDirectory(Path.GetDirectoryName(SaveFile));
+                File.WriteAllText(SaveFile, json);
+            }
+            catch (Exception) { }
+        }
+
+        /// <summary>
+        /// Load the user's sync options. This includes source and destinations, and more. If a problem is found in reading from saved config, a new empty config will be returned.
+        /// </summary>
+        /// <returns></returns>
+        public static SyncConfig CreateFromFile()
+        {
+            SyncConfig sync = new SyncConfig
+            {
+                SourceDir = Machine.MyPicturesDirectory,
+                DestinationDir = string.Empty,
+                FileExtensions = DefaultFileExtensions.ToList()
+            };
+            try
+            {
+                string fileContents = File.ReadAllText(SaveFile);
+                sync = JsonConvert.DeserializeObject<SyncConfig>(fileContents);
+            }
+            catch (Exception) { }
+            return sync;
+        }
+    }
+}

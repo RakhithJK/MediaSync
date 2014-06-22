@@ -47,40 +47,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="About.cs">
+    <Compile Include="FileIOHelper.cs" />
+    <Compile Include="Forms\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="About.Designer.cs">
+    <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="FormTray.cs">
+    <Compile Include="Forms\FormTray.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormTray.Designer.cs">
+    <Compile Include="Forms\FormTray.Designer.cs">
       <DependentUpon>FormTray.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormOptions.cs">
+    <Compile Include="Forms\FormOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormOptions.Designer.cs">
+    <Compile Include="Forms\FormOptions.Designer.cs">
       <DependentUpon>FormOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Machine.cs" />
+    <Compile Include="Config\Machine.cs" />
     <Compile Include="Model\ConfigValidCheckResult.cs" />
+    <Compile Include="Model\CopyResult.cs" />
     <Compile Include="Model\CopyTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileSyncer.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="SyncConfig.cs" />
-    <EmbeddedResource Include="About.resx">
+    <Compile Include="Model\SyncConfig.cs" />
+    <EmbeddedResource Include="Forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormTray.resx">
+    <EmbeddedResource Include="Forms\FormTray.resx">
       <DependentUpon>FormTray.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormOptions.resx">
+    <EmbeddedResource Include="Forms\FormOptions.resx">
       <DependentUpon>FormOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -104,12 +106,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="readme.md" />
-    <None Include="SyncConfig.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MediaComparer.cs" />
     <Content Include="Media\camera.ico" />
     <Content Include="readme.html">
       <DependentUpon>readme.md</DependentUpon>
