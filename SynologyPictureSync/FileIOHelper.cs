@@ -27,7 +27,14 @@ namespace MediaSync
         {
             Directory.CreateDirectory(new FileInfo(filePath).DirectoryName);
         }
+        public static bool DestinationDirHasFileNameAndSize(FileInfo file)
+        {
+            return file.Directory
+                        .GetFiles()
+                        .Any(x => x.Name.StartsWith(Path.GetFileNameWithoutExtension(file.Name)) &&
+                                x.Length == file.Length);
 
+        }
         public static IEnumerable<FileInfo> GetAllFilesWithExtensions(string directory, IEnumerable<string> fileExtensions)
         {
             DirectoryInfo sourceDir = new DirectoryInfo(directory);

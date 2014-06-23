@@ -3,6 +3,7 @@ using MediaSync.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace MediaSync
 {
@@ -19,7 +20,6 @@ namespace MediaSync
                     SourceFile = mediaFile.FullName,
                     ImageTakenOnDate = MediaComparer.GetImageTakenOnDate(mediaFile.FullName),
                     FileCreatedOn = mediaFile.CreationTime,
-
                 };
                 BuildDestinationForItem(task, config.DestinationDir);
                 yield return task;
@@ -28,9 +28,36 @@ namespace MediaSync
 
         public void BuildDestinationForItem(CopyTask task, string destinationDir)
         {
-            string targetDirFile = DetermineTargetDir(task);
-            task.DestinationFile = Path.Combine(destinationDir, targetDirFile);
+            string targetDirFileName = DetermineTargetDir(task);
+            task.DestinationFile = EnsureUniqueDestinationFileName(destinationDir, targetDirFileName);
+            task.FileExistsAlready = File.Exists(task.DestinationFile);
         }
+
+        private string EnsureUniqueDestinationFileName(string destinationDir, string destinationFile)
+        {
+            string fullFilePath = Path.Combine(destinationDir, destinationFile);
+
+            var file = new FileInfo(fullFilePath);
+            if (file.Exists)
+            {
+                if (FileIOHelper.DestinationDirHasFileNameAndSize(file))
+                {
+                    return fullFilePath;
+                }
+                string fileName = Path.GetFileNameWithoutExtension(fullFilePath);
+                int counter = 1;
+                //todo there's a defect here
+                string newFileName = Path.Combine(file.DirectoryName, "{0}-{1}{2}".FormatWith(fileName, counter, file.Extension));
+                while (File.Exists(newFileName) && counter < int.MaxValue && FileIOHelper.FileSizesAreSame(newFileName, fullFilePath))
+                {
+                    counter += 1;
+                    newFileName = Path.Combine(file.DirectoryName, "{0}-{1}{2}".FormatWith(fileName, counter, file.Extension));
+                }
+                return newFileName;
+            }
+            return fullFilePath;
+        }
+      
 
         /// <summary>
         /// Builds the target file path directory in the user's pref. Like year/monthname/date/file.jpg
@@ -54,28 +81,12 @@ namespace MediaSync
         public SyncCopyResult ExecuteFileCopyTasks(IEnumerable<CopyTask> copyTasks)
         {
             var syncResult = new SyncCopyResult();
-            foreach (var item in copyTasks)
+            syncResult.AlreadyExistedCount = copyTasks.Count(x => x.FileExistsAlready);
+            foreach (var item in copyTasks.Where(x => x.FileExistsAlready == false))
             {
                 try
                 {
-                    FileIOHelper.CreateDirectoryForFile(item.DestinationFile);
-
-                    if (File.Exists(item.DestinationFile))
-                    {
-                        if (FileIOHelper.FileSizesAreSame(item.SourceFile, item.DestinationFile))
-                        {
-                            item.CopyStatus = "File Already Exists With Same Size";
-                            syncResult.AlreadyExistedCount += 1;
-                            continue;
-                        }
-                        else
-                        {
-                            //TODO what if the 1-file.png already exists? don't make a 2- only to next time be forced to make a 3-
-                            item.CopyStatus = "File Already Exists - Different Sizes. Trying another .";
-                            item.DestinationFile = ModifyDestinationFileNameForExistingSizeMismatch(item.DestinationFile);
-                            syncResult.CopiedButAlreadyExistedDiffSizeCount += 1;
-                        }
-                    }
+                    EnsureTargetDirectoryExists(item);
                     File.Copy(item.SourceFile, item.DestinationFile);
                     item.FileCopiedOn = DateTime.Now;
                     item.CopyStatus = "Successfully copied to destination.";
@@ -90,20 +101,12 @@ namespace MediaSync
             return syncResult;
         }
 
-        private string ModifyDestinationFileNameForExistingSizeMismatch(string destinationFile)
+        private static void EnsureTargetDirectoryExists(CopyTask item)
         {
-            var file = new FileInfo(destinationFile);
-            string path = file.DirectoryName;
-            int counter = 1;
-            string newFileName = Path.Combine(path, "{0}-{1}".FormatWith(counter, file.Name));
-            while (File.Exists(newFileName) && counter < int.MaxValue)
+            if (Directory.Exists(item.DestinationFile) == false)
             {
-                counter += 1;
-                newFileName = Path.Combine(path, "{0}-{1}".FormatWith(counter, file.Name));
+                FileIOHelper.CreateDirectoryForFile(item.DestinationFile);
             }
-            return newFileName;
         }
-
-
     }
 }
