@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MediaSync 
+namespace MediaSync
 {
     public class CopyTask
     {
@@ -10,6 +10,7 @@ namespace MediaSync
         public DateTime FileCopiedOn { get; set; }
         public string CopyStatus { get; set; }
         public CopyResult CopyResult { get; set; }
+        public bool FileExistsAlready { get; set; }
         public DateTime? ImageTakenOnDate { get; set; }
     }
 
