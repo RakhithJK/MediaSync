@@ -35,7 +35,7 @@ namespace MediaSync
             try
             {
                 string json = JsonConvert.SerializeObject(this);
-                Directory.CreateDirectory(Path.GetDirectoryName(SaveFile));
+                EnsureDefaultSyncFileExists();
                 File.WriteAllText(SaveFile, json);
             }
             catch (Exception) { }
@@ -53,13 +53,29 @@ namespace MediaSync
                 DestinationDir = string.Empty,
                 FileExtensions = DefaultFileExtensions.ToList()
             };
+
+            EnsureDefaultSyncFileExists();
             try
             {
                 string fileContents = File.ReadAllText(SaveFile);
-                sync = JsonConvert.DeserializeObject<SyncConfig>(fileContents);
+                if (fileContents != string.Empty)
+                {
+                    sync = JsonConvert.DeserializeObject<SyncConfig>(fileContents);
+                }
             }
             catch (Exception) { }
             return sync;
         }
+
+        public static void EnsureDefaultSyncFileExists()
+        {
+            if (File.Exists(SaveFile) == false)
+            {
+                FileIOHelper.CreateDirectoryForFile(SaveFile);
+                File.Create(SaveFile);
+            }
+        }
+
     }
+
 }

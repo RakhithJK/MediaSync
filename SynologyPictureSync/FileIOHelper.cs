@@ -25,7 +25,11 @@ namespace MediaSync
 
         public static void CreateDirectoryForFile(string filePath)
         {
-            Directory.CreateDirectory(new FileInfo(filePath).DirectoryName);
+            string dir = new FileInfo(filePath).DirectoryName;
+            if (Directory.Exists(dir) == false)
+            {
+                Directory.CreateDirectory(dir);
+            }
         }
         public static bool DestinationDirHasFileNameAndSize(FileInfo file)
         {
