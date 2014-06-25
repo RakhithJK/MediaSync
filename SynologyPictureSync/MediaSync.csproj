@@ -105,7 +105,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -113,9 +112,6 @@
   <ItemGroup>
     <Compile Include="MediaComparer.cs" />
     <Content Include="Media\camera.ico" />
-    <Content Include="readme.html">
-      <DependentUpon>readme.md</DependentUpon>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
