@@ -9,7 +9,7 @@ namespace MediaSync
     [Serializable]
     public class SyncConfig
     {
-        public static string[] DefaultFileExtensions = new[] { "jpg", "png", "avi", "mov", "mp4" };
+        public static string[] DefaultFileExtensions = new[] { "jpg", "jpeg", "png", "avi", "mov", "mp4", "m4v", "mpg", "mpeg" };
         public string SourceDir { get; set; }
         public string DestinationDir { get; set; }
         public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
