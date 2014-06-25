@@ -59,7 +59,8 @@ namespace MediaSync
 
 
         /// <summary>
-        /// Builds the target file path directory in the user's pref. Like year/monthname/date/file.jpg
+        /// Builds the target file path directory in the user's pref. Like year/monthname/date/file.jpg. 
+        /// TODO make this a config item isntead of hard coded.
         /// </summary>
         /// <param name="task"></param>
         /// <returns></returns>
