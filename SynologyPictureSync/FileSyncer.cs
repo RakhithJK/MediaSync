@@ -57,7 +57,7 @@ namespace MediaSync
             }
             return fullFilePath;
         }
-      
+
 
         /// <summary>
         /// Builds the target file path directory in the user's pref. Like year/monthname/date/file.jpg
@@ -103,10 +103,7 @@ namespace MediaSync
 
         private static void EnsureTargetDirectoryExists(CopyTask item)
         {
-            if (Directory.Exists(item.DestinationFile) == false)
-            {
-                FileIOHelper.CreateDirectoryForFile(item.DestinationFile);
-            }
+            FileIOHelper.CreateDirectoryForFile(item.DestinationFile);
         }
     }
 }
