@@ -51,8 +51,6 @@ namespace MediaSync
             contextMenuStrip1.Items["syncNowToolStripMenuItem"].Enabled = (validConfig.HasValidConfig);
         }
 
-
-
         private ConfigValidCheckResult ValidateConfigCreateMissingConfigMessage(SyncConfig config)
         {
             var result = new ConfigValidCheckResult { HasValidConfig = true };

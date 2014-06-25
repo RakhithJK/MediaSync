@@ -33,6 +33,13 @@ namespace MediaSync
             task.FileExistsAlready = File.Exists(task.DestinationFile);
         }
 
+        /// <summary>
+        /// Checks whether the destination file exists. If not, then returns the combined dir and file.
+        /// If it exists, it appends the file size to the file name. You should further check if this modified file name exists.
+        /// </summary>
+        /// <param name="destinationDir"></param>
+        /// <param name="destinationFile"></param>
+        /// <returns></returns>
         private string EnsureUniqueDestinationFileName(string destinationDir, string destinationFile)
         {
             string fullFilePath = Path.Combine(destinationDir, destinationFile);
@@ -44,16 +51,8 @@ namespace MediaSync
                 {
                     return fullFilePath;
                 }
-                string fileName = Path.GetFileNameWithoutExtension(fullFilePath);
-                int counter = 1;
-                //todo there's a defect here
-                string newFileName = Path.Combine(file.DirectoryName, "{0}-{1}{2}".FormatWith(fileName, counter, file.Extension));
-                while (File.Exists(newFileName) && counter < int.MaxValue && FileIOHelper.FileSizesAreSame(newFileName, fullFilePath))
-                {
-                    counter += 1;
-                    newFileName = Path.Combine(file.DirectoryName, "{0}-{1}{2}".FormatWith(fileName, counter, file.Extension));
-                }
-                return newFileName;
+
+                return Path.Combine(file.DirectoryName, "{0}-{1}{2}".FormatWith(file.Name, file.Length, file.Extension));
             }
             return fullFilePath;
         }

@@ -9,7 +9,6 @@ namespace MediaSync
 {
     public class FileIOHelper
     {
-
         public static bool FileSizesAreSame(string file1, string file2)
         {
             try
@@ -31,19 +30,29 @@ namespace MediaSync
                 Directory.CreateDirectory(dir);
             }
         }
+
+        /// <summary>
+        /// Determine whether there's another file that:
+        /// - has a name that starts with this file's name.
+        /// - is in the same directory as this file.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static bool DestinationDirHasFileNameAndSize(FileInfo file)
         {
             return file.Directory
                         .GetFiles()
                         .Any(x => x.Name.StartsWith(Path.GetFileNameWithoutExtension(file.Name)) &&
-                                x.Length == file.Length);
+                                  x.Length == file.Length);
 
         }
         public static IEnumerable<FileInfo> GetAllFilesWithExtensions(string directory, IEnumerable<string> fileExtensions)
         {
             DirectoryInfo sourceDir = new DirectoryInfo(directory);
+
             return fileExtensions
                     .SelectMany(fileExt => sourceDir.GetFiles("*." + fileExt, SearchOption.AllDirectories))
+
                     .Distinct()
                     .ToList();
         }
