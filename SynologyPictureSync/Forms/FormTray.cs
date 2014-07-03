@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MediaSync
@@ -44,6 +45,9 @@ namespace MediaSync
             }
         }
 
+        /// <summary>
+        /// Check the 
+        /// </summary>
         private void SetSyncCommandEnabledIfConfigValid()
         {
             var syncConfig = SyncConfig.CreateFromFile();
@@ -101,7 +105,7 @@ namespace MediaSync
         }
 
 
-        private void Sync(SyncConfig syncConfig)
+        private async Task Sync(SyncConfig syncConfig)
         {
             //do a sanity check on the config to avoid exceptions while processing
             if (ValidateConfigCreateMissingConfigMessage(syncConfig).HasValidConfig == false)
@@ -112,14 +116,14 @@ namespace MediaSync
             try
             {
                 ShowBalloon("Finding items...");
-                var fileSync = new FileSyncer();
+                var fileSync = new FileSyncer(syncConfig);
 
-                List<CopyTask> copyTasks = fileSync.BuildFileCopyTasks(syncConfig).ToList();
+                List<CopyTask> copyTasks = fileSync.BuildFileCopyTasks( ).ToList();
 
                 ShowBalloon("Copying {0} items...".FormatWith(copyTasks.Count));
 
-                SyncCopyResult copyResult = fileSync.ExecuteFileCopyTasks(copyTasks);
-
+                SyncCopyResult copyResult = await fileSync.ExecuteFileCopyTasks(copyTasks);
+                
                 DeleteSourceFilesIfRequired(syncConfig, copyTasks);
 
                 ShowCompletionBalloon(copyResult, syncConfig.DestinationDir);
@@ -127,7 +131,8 @@ namespace MediaSync
             }
             catch (Exception ex)
             {
-                FileIOHelper.WriteToErrLog(ex.Message);
+                var fileIOHelper = new FileIOHelper();
+                fileIOHelper.WriteToErrLog(ex.Message);
                 ShowBalloon("Sorry we had a problem when syncing. The log file has more details. " + FileIOHelper.ErrLogFile, 10);
             }
         }

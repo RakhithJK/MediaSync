@@ -4,14 +4,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MediaSync
 {
     public class FileSyncer
     {
-        public IEnumerable<CopyTask> BuildFileCopyTasks(SyncConfig config)
+        private SyncConfig Config;
+        private FileIOHelper FileHelper;
+
+        public FileSyncer(SyncConfig config)
         {
-            var allMatchingFilesInDir = FileIOHelper.GetAllFilesWithExtensions(config.SourceDir, config.FileExtensions);
+            Config = config;
+            FileHelper = new FileIOHelper();
+        }
+
+        /// <summary>
+        /// Find all files in the source directory, and create a collection of CopyTasks. Analyzes the destination for each file, determines those that have been previously copied and should be skipped. Determines the destination file name.
+        /// </summary>
+        /// <returns>A list of CopyTask objects. </returns>
+        public IEnumerable<CopyTask> BuildFileCopyTasks()
+        {
+            var allMatchingFilesInDir = FileHelper.GetAllFilesWithExtensions(Config.SourceDir, Config.FileExtensions);
 
             foreach (var mediaFile in allMatchingFilesInDir)
             {
@@ -21,15 +35,19 @@ namespace MediaSync
                     ImageTakenOnDate = MediaComparer.GetImageTakenOnDate(mediaFile.FullName),
                     FileCreatedOn = mediaFile.CreationTime,
                 };
-                BuildDestinationForItem(task, config.DestinationDir);
+                BuildDestinationForItem(task);
                 yield return task;
             }
         }
 
-        public void BuildDestinationForItem(CopyTask task, string destinationDir)
+        /// <summary>
+        /// Ensure we have a good destination name and determine whether that file exists already.
+        /// </summary>
+        /// <param name="task"></param>
+        public void BuildDestinationForItem(CopyTask task)
         {
             string targetDirFileName = DetermineTargetDir(task);
-            task.DestinationFile = EnsureUniqueDestinationFileName(destinationDir, targetDirFileName);
+            task.DestinationFile = EnsureUniqueDestinationFileName(targetDirFileName);
             task.FileExistsAlready = File.Exists(task.DestinationFile);
         }
 
@@ -40,14 +58,14 @@ namespace MediaSync
         /// <param name="destinationDir"></param>
         /// <param name="destinationFile"></param>
         /// <returns></returns>
-        private string EnsureUniqueDestinationFileName(string destinationDir, string destinationFile)
+        private string EnsureUniqueDestinationFileName(string destinationFile)
         {
-            string fullFilePath = Path.Combine(destinationDir, destinationFile);
+            string fullFilePath = Path.Combine(Config.DestinationDir, destinationFile);
 
             var file = new FileInfo(fullFilePath);
             if (file.Exists)
             {
-                if (FileIOHelper.DestinationDirHasFileNameAndSize(file))
+                if (FileHelper.DestinationDirHasFileNameAndSize(file))
                 {
                     return fullFilePath;
                 }
@@ -59,51 +77,56 @@ namespace MediaSync
 
 
         /// <summary>
-        /// Builds the target file path directory in the user's pref. Like year/monthname/date/file.jpg. 
-        /// TODO make this a config item isntead of hard coded.
+        /// Builds the target file path directory in the user's pref. Like year/monthname/date/file.jpg. Take it from the config.
         /// </summary>
         /// <param name="task"></param>
         /// <returns></returns>
         private string DetermineTargetDir(CopyTask task)
         {
             DateTime targetDate = task.ImageTakenOnDate.GetValueOrDefault(task.FileCreatedOn);
-
-            List<string> pathParts = new List<string>{
-                targetDate.Year.ToString(),
-                targetDate.ToShortMonthName(),
-                targetDate.Day.ToString(),
-                System.IO.Path.GetFileName(task.SourceFile)
+            var replacements = new Dictionary<string, string> 
+            {             
+                 {"{year}", targetDate.Year.ToString()},
+                 {"{month}",  targetDate.ToShortMonthName()},
+                 {"{day}", targetDate.Day.ToString()}
             };
 
-            return Path.Combine(pathParts.ToArray());
+            string destinationDir = Config.DestinationDir;
+
+            foreach (var item in replacements)
+            {
+                destinationDir = destinationDir.Replace(item.Key, item.Value);
+            }
+
+            return Path.Combine(destinationDir, Path.GetFileName(task.SourceFile));
         }
 
-        public SyncCopyResult ExecuteFileCopyTasks(IEnumerable<CopyTask> copyTasks)
+        /// <summary>
+        /// Execute a set of copy tasks.
+        /// </summary>
+        /// <param name="copyTasks"></param>
+        /// <returns>The status of the copy tasks. A set of counts of success, fail, etc.</returns>
+        public async Task<SyncCopyResult> ExecuteFileCopyTasks(IEnumerable<CopyTask> copyTasks)
         {
             var syncResult = new SyncCopyResult();
             syncResult.AlreadyExistedCount = copyTasks.Count(x => x.FileExistsAlready);
-            foreach (var item in copyTasks.Where(x => x.FileExistsAlready == false))
+            foreach (var copyTask in copyTasks.Where(x => x.FileExistsAlready == false))
             {
                 try
                 {
-                    EnsureTargetDirectoryExists(item);
-                    File.Copy(item.SourceFile, item.DestinationFile);
-                    item.FileCopiedOn = DateTime.Now;
-                    item.CopyStatus = "Successfully copied to destination.";
+                    FileHelper.CreateDirectoryForFile(copyTask.DestinationFile);
+
+                    await FileHelper.CopyFile(copyTask);
+                    copyTask.FileCopiedOn = DateTime.Now;
                     syncResult.CopiedSuccessfullyCount += 1;
                 }
                 catch (Exception e)
                 {
-                    item.CopyStatus = e.Message;
+                    copyTask.CopyStatus = e.Message;
                     syncResult.UncopiedProblemCount += 1;
                 }
             }
             return syncResult;
-        }
-
-        private static void EnsureTargetDirectoryExists(CopyTask item)
-        {
-            FileIOHelper.CreateDirectoryForFile(item.DestinationFile);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace MediaSync
         public static string[] DefaultFileExtensions = new[] { "jpg", "jpeg", "png", "avi", "mov", "mp4", "m4v", "mpg", "mpeg" };
         public string SourceDir { get; set; }
         public string DestinationDir { get; set; }
+
         public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
         public bool ShouldWarnOnDelete { get; set; }
 
@@ -69,13 +70,15 @@ namespace MediaSync
 
         public static void EnsureDefaultSyncFileExists()
         {
-            if (File.Exists(SaveFile) == false)
+            var configSaveFile = new FileInfo(SaveFile);
+            if (configSaveFile.Exists == false)
             {
-                FileIOHelper.CreateDirectoryForFile(SaveFile);
+                if (Directory.Exists(configSaveFile.DirectoryName) == false)
+                {
+                    Directory.CreateDirectory(configSaveFile.DirectoryName);
+                }
                 File.Create(SaveFile);
             }
         }
-
     }
-
 }

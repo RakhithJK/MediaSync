@@ -42,6 +42,7 @@
             this.txtFileExtensions = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.chkWarnOnDelete = new System.Windows.Forms.CheckBox();
+            this.lblDestinationHint = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnSave
@@ -139,7 +140,7 @@
             // 
             this.txtFileExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFileExtensions.Location = new System.Drawing.Point(154, 128);
+            this.txtFileExtensions.Location = new System.Drawing.Point(154, 135);
             this.txtFileExtensions.Name = "txtFileExtensions";
             this.txtFileExtensions.Size = new System.Drawing.Size(266, 20);
             this.txtFileExtensions.TabIndex = 10;
@@ -147,7 +148,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(71, 131);
+            this.label3.Location = new System.Drawing.Point(71, 138);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 9;
@@ -163,11 +164,22 @@
             this.chkWarnOnDelete.Text = "Warn Me Once Before Deleting";
             this.chkWarnOnDelete.UseVisualStyleBackColor = true;
             // 
+            // lblDestinationHint
+            // 
+            this.lblDestinationHint.AutoSize = true;
+            this.lblDestinationHint.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.lblDestinationHint.Location = new System.Drawing.Point(156, 117);
+            this.lblDestinationHint.Name = "lblDestinationHint";
+            this.lblDestinationHint.Size = new System.Drawing.Size(222, 13);
+            this.lblDestinationHint.TabIndex = 12;
+            this.lblDestinationHint.Text = "You can use tokens like {year}\\(month}{date}";
+            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(468, 204);
+            this.Controls.Add(this.lblDestinationHint);
             this.Controls.Add(this.chkWarnOnDelete);
             this.Controls.Add(this.txtFileExtensions);
             this.Controls.Add(this.label3);
@@ -206,5 +218,6 @@
         private System.Windows.Forms.TextBox txtFileExtensions;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chkWarnOnDelete;
+        private System.Windows.Forms.Label lblDestinationHint;
     }
 }
