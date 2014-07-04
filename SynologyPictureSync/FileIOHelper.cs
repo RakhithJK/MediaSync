@@ -113,28 +113,15 @@ namespace MediaSync
         /// <returns></returns>
         public async Task CopyFile(CopyTask copyTask)
         {
-            using (StreamReader SourceReader = new StreamReader(copyTask.SourceFile))
-            using (StreamWriter DestinationWriter = File.CreateText(copyTask.DestinationFile))
+            byte[] fileBytes = File.ReadAllBytes(copyTask.SourceFile);
+
+            using (FileStream destStream = new FileStream(copyTask.DestinationFile, FileMode.CreateNew, FileAccess.Write, FileShare.Write, bufferSize: 4096, useAsync: true))
             {
-                await CopyFilesAsync(SourceReader, DestinationWriter);
-            }
+                await destStream.WriteAsync(fileBytes, 0, fileBytes.Length);
+            };
         }
 
-        /// <summary>
-        /// Copy a source and destinations using Stream classes.
-        /// </summary>
-        /// <param name="Source"></param>
-        /// <param name="Destination"></param>
-        /// <returns></returns>
-        public async Task CopyFilesAsync(StreamReader Source, StreamWriter Destination)
-        {
-            char[] buffer = new char[0x1000];
-            int numRead;
-            while ((numRead = await Source.ReadAsync(buffer, 0, buffer.Length)) != 0)
-            {
-                await Destination.WriteAsync(buffer, 0, numRead);
-            }
-        }
+
 
         /// <summary>
         /// The location of the error log file.
