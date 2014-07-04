@@ -46,6 +46,14 @@ namespace MediaSync
         {
             DirectoryInfo sourceDir = new DirectoryInfo(directory);
 
+            foreach (var file in fileExtensions
+                          .SelectMany(fileExt => sourceDir.GetFiles("*." + fileExt, SearchOption.TopDirectoryOnly))
+                          .Distinct())
+            {
+                yield return file;
+            }
+
+
             foreach (DirectoryInfo item in sourceDir.GetDirectories())
             {
                 if (CanReadDir(item.FullName))
