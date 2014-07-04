@@ -77,7 +77,7 @@
             // 
             // txtSourceDir
             // 
-            this.txtSourceDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtSourceDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSourceDir.Location = new System.Drawing.Point(154, 59);
             this.txtSourceDir.Name = "txtSourceDir";
@@ -109,7 +109,7 @@
             // 
             // txtDestinationDir
             // 
-            this.txtDestinationDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtDestinationDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDestinationDir.Location = new System.Drawing.Point(154, 93);
             this.txtDestinationDir.Name = "txtDestinationDir";
@@ -138,7 +138,7 @@
             // 
             // txtFileExtensions
             // 
-            this.txtFileExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtFileExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFileExtensions.Location = new System.Drawing.Point(154, 135);
             this.txtFileExtensions.Name = "txtFileExtensions";
@@ -172,7 +172,8 @@
             this.lblDestinationHint.Name = "lblDestinationHint";
             this.lblDestinationHint.Size = new System.Drawing.Size(222, 13);
             this.lblDestinationHint.TabIndex = 12;
-            this.lblDestinationHint.Text = "You can use tokens like {year}\\(month}{date}";
+            this.lblDestinationHint.Text = "You can use tokens like {year}\\(month}{day}";
+
             // 
             // FormOptions
             // 
