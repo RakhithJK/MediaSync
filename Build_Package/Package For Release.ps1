@@ -1,6 +1,6 @@
 [System.Reflection.Assembly]::Load("WindowsBase,Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
-$releaseDir = (get-item $scriptPath ).parent.FullName + "\SynologyPictureSync\bin\Release";
+$releaseDir = (get-item $scriptPath ).parent.FullName + "\App\bin\Release";
 
 $zipFile = $releaseDir + "\MediaSync.zip"
   
