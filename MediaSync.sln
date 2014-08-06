@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaSync", "SynologyPictureSync\MediaSync.csproj", "{B175B045-E386-411B-B0C0-F0DABBDE22C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaSync", "App\MediaSync.csproj", "{B175B045-E386-411B-B0C0-F0DABBDE22C2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Install", "Install", "{C5274FF5-5BC0-4519-8EA8-A93B866248C9}"
 	ProjectSection(SolutionItems) = preProject
