@@ -2,6 +2,7 @@
 using MediaSync.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -127,10 +128,12 @@ namespace MediaSync
             {
                 return;
             }
+            Stopwatch stopwatch = new Stopwatch();
 
             try
             {
                 ShowBalloon("Finding items...");
+                stopwatch.Start();
                 var fileSync = new FileSyncer(syncConfig);
                 var copyResult = new SyncCopyResult();
                 List<CopyTask> copyTasks = fileSync.BuildFileCopyTasks().ToList();
@@ -143,7 +146,14 @@ namespace MediaSync
                     if (shouldLog) { await FileHelper.WriteToErrLogAsync("Completed file copy tasks"); }
 
                     await DeleteSourceFilesIfRequired(syncConfig, copyTasks);
+
                 }
+                stopwatch.Stop();
+                copyResult.TimeElapsedMsg = "Total sync time was {0}:{1}".FormatWith(
+                    stopwatch.Elapsed.Minutes.ToString("00"), 
+                    stopwatch.Elapsed.Seconds.ToString("00"));
+                if (shouldLog) { await FileHelper.WriteToErrLogAsync(copyResult.TimeElapsedMsg); }
+
                 ShowCompletionBalloon(copyResult, syncConfig.DestinationDir);
 
             }
@@ -201,7 +211,8 @@ namespace MediaSync
             var msg = new StringBuilder();
             msg.AppendLine("Done syncing to {0}.".FormatWith(targetDir));
             msg.AppendLine("{0} copied.".FormatWith(result.CopiedSuccessfullyCount));
-            
+            msg.AppendLine(result.TimeElapsedMsg);
+
             if (result.AlreadyExistedCount > 0)
             {
                 msg.AppendLine("{0} already existed.".FormatWith(result.AlreadyExistedCount));
