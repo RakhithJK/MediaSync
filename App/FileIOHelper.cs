@@ -13,7 +13,7 @@ namespace MediaSync
         /// <summary>
         /// Given a file path, ensure its directory exists.
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">The full file path of the file to be created.</param>
         public void CreateDirectoryForFile(string filePath)
         {
             string dir = new FileInfo(filePath).DirectoryName;
@@ -21,6 +21,7 @@ namespace MediaSync
             {
                 Directory.CreateDirectory(dir);
             }
+
         }
 
         /// <summary>
@@ -46,27 +47,10 @@ namespace MediaSync
         {
             DirectoryInfo sourceDir = new DirectoryInfo(directory);
 
-            foreach (var file in fileExtensions
-                          .SelectMany(fileExt => sourceDir.GetFiles("*." + fileExt, SearchOption.TopDirectoryOnly))
-                          .Distinct())
-            {
-                yield return file;
-            }
-
-
-            foreach (DirectoryInfo item in sourceDir.GetDirectories())
-            {
-                if (CanReadDir(item.FullName))
-                {
-                    foreach (var file in fileExtensions
-                          .SelectMany(fileExt => item.GetFiles("*." + fileExt, SearchOption.AllDirectories))
-                          .Distinct()
-                          )
-                    {
-                        yield return file;
-                    }
-                }
-            }
+            var matchingFiles = fileExtensions
+                     .SelectMany(fileExt => sourceDir.GetFiles("*." + fileExt, SearchOption.TopDirectoryOnly))
+                     .Distinct();
+            return matchingFiles;
         }
 
         /// <summary>
@@ -76,9 +60,18 @@ namespace MediaSync
         public void WriteToErrLog(string msg)
         {
             msg = "{0}\t{1}{2}".FormatWith(DateTime.Now.ToString("yyyy-MMM-dd HH:mm"), msg, Environment.NewLine);
-            using (var file = File.AppendText(ErrLogFile))
+            using (var file = File.AppendText(OutputLogFile))
             {
                 file.Write(msg);
+            }
+        }
+
+        public async Task WriteToErrLogAsync(string msg)
+        {
+            msg = "{0}\t{1}{2}".FormatWith(DateTime.Now.ToString("yyyy-MMM-dd HH:mm"), msg, Environment.NewLine);
+            using (StreamWriter writer = File.AppendText(OutputLogFile))
+            {
+                await writer.WriteAsync(msg);
             }
         }
 
@@ -129,12 +122,10 @@ namespace MediaSync
             };
         }
 
-
-
         /// <summary>
-        /// The location of the error log file.
+        /// The location of the error/debug log file.
         /// </summary>
-        public static string ErrLogFile { get { return Path.Combine(AppDir, "ErrorLog.txt"); } }
+        public static string OutputLogFile { get { return Path.Combine(AppDir, "Output.txt"); } }
 
         /// <summary>
         /// The location of our writable local dir for this app's usage.

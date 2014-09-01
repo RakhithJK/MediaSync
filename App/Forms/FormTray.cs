@@ -12,10 +12,12 @@ namespace MediaSync
 {
     public partial class FormTray : Form
     {
+        public FileIOHelper FileHelper { get; set; }
         public FormTray()
         {
             InitializeComponent();
             SetSyncCommandEnabledIfConfigValid();
+            FileHelper = new FileIOHelper();
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -37,11 +39,22 @@ namespace MediaSync
 
         private void syncNowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             var syncConfig = LoadSyncConfig();
             if (syncConfig != null)
             {
-                Sync(syncConfig);
+                if (syncConfig.ShouldLogDebug)
+                {
+                    Task.Run(async () =>
+                    {
+                        await FileHelper.WriteToErrLogAsync("Starting sync.");
+                    });
+                }
+                Task.Run(async () =>
+                {
+                    await Sync(syncConfig);
+                    System.Media.SystemSounds.Hand.Play();
+
+                });
             }
         }
 
@@ -107,6 +120,8 @@ namespace MediaSync
 
         private async Task Sync(SyncConfig syncConfig)
         {
+            bool shouldLog = syncConfig.ShouldLogDebug;
+
             //do a sanity check on the config to avoid exceptions while processing
             if (ValidateConfigCreateMissingConfigMessage(syncConfig).HasValidConfig == false)
             {
@@ -117,15 +132,18 @@ namespace MediaSync
             {
                 ShowBalloon("Finding items...");
                 var fileSync = new FileSyncer(syncConfig);
+                var copyResult = new SyncCopyResult();
+                List<CopyTask> copyTasks = fileSync.BuildFileCopyTasks().ToList();
+                if (shouldLog) { await FileHelper.WriteToErrLogAsync("Found {0} items to sync.".FormatWith(copyTasks.Count)); }
+                if (copyTasks.Any())
+                {
+                    ShowBalloon("Copying {0} items...".FormatWith(copyTasks.Count));
 
-                List<CopyTask> copyTasks = fileSync.BuildFileCopyTasks( ).ToList();
+                    copyResult = await fileSync.ExecuteFileCopyTasks(copyTasks);
+                    if (shouldLog) { await FileHelper.WriteToErrLogAsync("Completed file copy tasks"); }
 
-                ShowBalloon("Copying {0} items...".FormatWith(copyTasks.Count));
-
-                SyncCopyResult copyResult = await fileSync.ExecuteFileCopyTasks(copyTasks);
-                
-                DeleteSourceFilesIfRequired(syncConfig, copyTasks);
-
+                    await DeleteSourceFilesIfRequired(syncConfig, copyTasks);
+                }
                 ShowCompletionBalloon(copyResult, syncConfig.DestinationDir);
 
             }
@@ -133,10 +151,10 @@ namespace MediaSync
             {
                 var fileIOHelper = new FileIOHelper();
                 fileIOHelper.WriteToErrLog(ex.Message);
-                ShowBalloon("Sorry we had a problem when syncing. The log file has more details. " + FileIOHelper.ErrLogFile, 10);
+                ShowBalloon("Sorry we had a problem when syncing. The log file has more details. " + FileIOHelper.OutputLogFile, 10);
             }
         }
-        private void DeleteSourceFilesIfRequired(SyncConfig syncConfig, IEnumerable<CopyTask> copyTasks)
+        private async Task DeleteSourceFilesIfRequired(SyncConfig syncConfig, IEnumerable<CopyTask> copyTasks)
         {
             if (syncConfig.ShouldDeleteSourceWhenSuccessfullyCompleted)
             {
@@ -144,13 +162,24 @@ namespace MediaSync
 
                 if (shouldContinue == DialogResult.Yes)
                 {
-                    foreach (var item in copyTasks.Where(x => x.CopyResult == CopyResult.CopiedSuccessfully || x.CopyResult == CopyResult.AlreadyExisted))
-                    {
-                        DeleteSuccessfullyCopiedSourceItem(item.SourceFile);
-                    }
+                    var itemsToDelete = copyTasks.Where(x =>
+                        x.CopyResult == CopyResult.CopiedSuccessfully ||
+                        x.CopyResult == CopyResult.AlreadyExisted)
+                        .Select(x => x.SourceFile);
+                    await DeleteSourceFiles(itemsToDelete, syncConfig.ShouldLogDebug);
                 }
             }
         }
+
+        public async Task DeleteSourceFiles(IEnumerable<string> sourceFiles, bool writeLogEntryWhenDeleted)
+        {
+            foreach (string sourceFile in sourceFiles)
+            {
+                DeleteSuccessfullyCopiedSourceItem(sourceFile);
+                if (writeLogEntryWhenDeleted) { await FileHelper.WriteToErrLogAsync("Deleted {0}".FormatWith(sourceFile)); }
+            }
+        }
+
         private void ShowCompletionBalloon(SyncCopyResult result, string targetDir)
         {
             string completionMessage = CreateCompletedMessage(result, targetDir);
@@ -171,12 +200,8 @@ namespace MediaSync
         {
             var msg = new StringBuilder();
             msg.AppendLine("Done syncing to {0}.".FormatWith(targetDir));
-
-            if (result.CopiedSuccessfullyCount > 0)
-            {
-                msg.AppendLine("{0} copied.".FormatWith(result.CopiedSuccessfullyCount));
-            }
-
+            msg.AppendLine("{0} copied.".FormatWith(result.CopiedSuccessfullyCount));
+            
             if (result.AlreadyExistedCount > 0)
             {
                 msg.AppendLine("{0} already existed.".FormatWith(result.AlreadyExistedCount));

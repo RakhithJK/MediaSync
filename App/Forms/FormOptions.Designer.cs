@@ -43,12 +43,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.chkWarnOnDelete = new System.Windows.Forms.CheckBox();
             this.lblDestinationHint = new System.Windows.Forms.Label();
+            this.chkLogOutput = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(381, 169);
+            this.btnSave.Location = new System.Drawing.Point(381, 200);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 0;
@@ -59,7 +60,7 @@
             // chkDeleteSourceAfterCopy
             // 
             this.chkDeleteSourceAfterCopy.AutoSize = true;
-            this.chkDeleteSourceAfterCopy.Location = new System.Drawing.Point(154, 14);
+            this.chkDeleteSourceAfterCopy.Location = new System.Drawing.Point(154, 117);
             this.chkDeleteSourceAfterCopy.Name = "chkDeleteSourceAfterCopy";
             this.chkDeleteSourceAfterCopy.Size = new System.Drawing.Size(238, 17);
             this.chkDeleteSourceAfterCopy.TabIndex = 1;
@@ -69,7 +70,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 62);
+            this.label1.Location = new System.Drawing.Point(30, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(118, 13);
             this.label1.TabIndex = 2;
@@ -77,9 +78,9 @@
             // 
             // txtSourceDir
             // 
-            this.txtSourceDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtSourceDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSourceDir.Location = new System.Drawing.Point(154, 59);
+            this.txtSourceDir.Location = new System.Drawing.Point(154, 14);
             this.txtSourceDir.Name = "txtSourceDir";
             this.txtSourceDir.Size = new System.Drawing.Size(266, 20);
             this.txtSourceDir.TabIndex = 3;
@@ -88,7 +89,7 @@
             // btnBrowseSource
             // 
             this.btnBrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseSource.Location = new System.Drawing.Point(426, 59);
+            this.btnBrowseSource.Location = new System.Drawing.Point(426, 14);
             this.btnBrowseSource.Name = "btnBrowseSource";
             this.btnBrowseSource.Size = new System.Drawing.Size(30, 23);
             this.btnBrowseSource.TabIndex = 4;
@@ -99,7 +100,7 @@
             // btnBrowseDest
             // 
             this.btnBrowseDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseDest.Location = new System.Drawing.Point(426, 91);
+            this.btnBrowseDest.Location = new System.Drawing.Point(426, 46);
             this.btnBrowseDest.Name = "btnBrowseDest";
             this.btnBrowseDest.Size = new System.Drawing.Size(30, 23);
             this.btnBrowseDest.TabIndex = 7;
@@ -109,9 +110,9 @@
             // 
             // txtDestinationDir
             // 
-            this.txtDestinationDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtDestinationDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDestinationDir.Location = new System.Drawing.Point(154, 93);
+            this.txtDestinationDir.Location = new System.Drawing.Point(154, 48);
             this.txtDestinationDir.Name = "txtDestinationDir";
             this.txtDestinationDir.Size = new System.Drawing.Size(266, 20);
             this.txtDestinationDir.TabIndex = 6;
@@ -120,7 +121,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(43, 96);
+            this.label2.Location = new System.Drawing.Point(43, 51);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(105, 13);
             this.label2.TabIndex = 5;
@@ -130,7 +131,7 @@
             // 
             this.lblMsg.AutoSize = true;
             this.lblMsg.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.lblMsg.Location = new System.Drawing.Point(12, 156);
+            this.lblMsg.Location = new System.Drawing.Point(12, 185);
             this.lblMsg.Name = "lblMsg";
             this.lblMsg.Size = new System.Drawing.Size(36, 13);
             this.lblMsg.TabIndex = 8;
@@ -138,9 +139,9 @@
             // 
             // txtFileExtensions
             // 
-            this.txtFileExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtFileExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFileExtensions.Location = new System.Drawing.Point(154, 135);
+            this.txtFileExtensions.Location = new System.Drawing.Point(154, 90);
             this.txtFileExtensions.Name = "txtFileExtensions";
             this.txtFileExtensions.Size = new System.Drawing.Size(266, 20);
             this.txtFileExtensions.TabIndex = 10;
@@ -148,7 +149,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(71, 138);
+            this.label3.Location = new System.Drawing.Point(71, 93);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 9;
@@ -157,7 +158,7 @@
             // chkWarnOnDelete
             // 
             this.chkWarnOnDelete.AutoSize = true;
-            this.chkWarnOnDelete.Location = new System.Drawing.Point(154, 37);
+            this.chkWarnOnDelete.Location = new System.Drawing.Point(154, 141);
             this.chkWarnOnDelete.Name = "chkWarnOnDelete";
             this.chkWarnOnDelete.Size = new System.Drawing.Size(175, 17);
             this.chkWarnOnDelete.TabIndex = 11;
@@ -168,18 +169,28 @@
             // 
             this.lblDestinationHint.AutoSize = true;
             this.lblDestinationHint.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.lblDestinationHint.Location = new System.Drawing.Point(156, 117);
+            this.lblDestinationHint.Location = new System.Drawing.Point(156, 72);
             this.lblDestinationHint.Name = "lblDestinationHint";
-            this.lblDestinationHint.Size = new System.Drawing.Size(222, 13);
+            this.lblDestinationHint.Size = new System.Drawing.Size(218, 13);
             this.lblDestinationHint.TabIndex = 12;
             this.lblDestinationHint.Text = "You can use tokens like {year}\\(month}{day}";
-
+            // 
+            // chkLogOutput
+            // 
+            this.chkLogOutput.AutoSize = true;
+            this.chkLogOutput.Location = new System.Drawing.Point(154, 164);
+            this.chkLogOutput.Name = "chkLogOutput";
+            this.chkLogOutput.Size = new System.Drawing.Size(79, 17);
+            this.chkLogOutput.TabIndex = 13;
+            this.chkLogOutput.Text = "Log Output";
+            this.chkLogOutput.UseVisualStyleBackColor = true;
             // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 204);
+            this.ClientSize = new System.Drawing.Size(468, 235);
+            this.Controls.Add(this.chkLogOutput);
             this.Controls.Add(this.lblDestinationHint);
             this.Controls.Add(this.chkWarnOnDelete);
             this.Controls.Add(this.txtFileExtensions);
@@ -220,5 +231,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chkWarnOnDelete;
         private System.Windows.Forms.Label lblDestinationHint;
+        private System.Windows.Forms.CheckBox chkLogOutput;
     }
 }

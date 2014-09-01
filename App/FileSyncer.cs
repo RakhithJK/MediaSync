@@ -47,7 +47,7 @@ namespace MediaSync
         public void BuildDestinationForItem(CopyTask task)
         {
             string targetDirFileName = DetermineTargetDir(task);
-            task.DestinationFile = EnsureUniqueDestinationFileName(targetDirFileName);
+            task.DestinationFile = BuildUniqueDestinationFileName(targetDirFileName);
             task.FileExistsAlready = File.Exists(task.DestinationFile);
         }
 
@@ -58,7 +58,7 @@ namespace MediaSync
         /// <param name="destinationDir"></param>
         /// <param name="destinationFile"></param>
         /// <returns></returns>
-        private string EnsureUniqueDestinationFileName(string destinationFile)
+        private string BuildUniqueDestinationFileName(string destinationFile)
         {
             string fullFilePath = Path.Combine(Config.DestinationDir, destinationFile);
 
@@ -110,15 +110,25 @@ namespace MediaSync
         {
             var syncResult = new SyncCopyResult();
             syncResult.AlreadyExistedCount = copyTasks.Count(x => x.FileExistsAlready);
-            foreach (var copyTask in copyTasks.Where(x => x.FileExistsAlready == false))
+            var itemsToCopy = copyTasks.Where(x => x.FileExistsAlready == false);
+            if (Config.ShouldLogDebug)
+            {
+                await FileHelper.WriteToErrLogAsync("{0} items already exist at destination.".FormatWith(syncResult.AlreadyExistedCount));
+                await FileHelper.WriteToErrLogAsync("Copying {0} items to {1}".FormatWith(itemsToCopy.Count(), Config.DestinationDir));
+            }
+            foreach (var copyTask in itemsToCopy)
             {
                 try
                 {
-                    FileHelper.CreateDirectoryForFile(copyTask.DestinationFile);
-
-                    await FileHelper.CopyFile(copyTask);
-                    copyTask.FileCopiedOn = DateTime.Now;
+                    await ExecuteCopyTask(copyTask);
                     syncResult.CopiedSuccessfullyCount += 1;
+                    if (Config.ShouldLogDebug)
+                    {
+                        await FileHelper.WriteToErrLogAsync("File {0} of {1} copied successfully to {2}".FormatWith(
+                            syncResult.CopiedSuccessfullyCount,
+                            itemsToCopy.Count(),
+                            copyTask.DestinationFile));
+                    }
                 }
                 catch (Exception e)
                 {
@@ -127,6 +137,13 @@ namespace MediaSync
                 }
             }
             return syncResult;
+        }
+
+        public async Task ExecuteCopyTask(CopyTask copyTask)
+        {
+            FileHelper.CreateDirectoryForFile(copyTask.DestinationFile);
+            await FileHelper.CopyFile(copyTask);
+            copyTask.FileCopiedOn = DateTime.Now;
         }
     }
 }

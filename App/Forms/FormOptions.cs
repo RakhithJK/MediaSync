@@ -31,6 +31,7 @@ namespace MediaSync
                 SourceDir = txtSourceDir.Text.Trim(),
                 ShouldDeleteSourceWhenSuccessfullyCompleted = chkDeleteSourceAfterCopy.Checked,
                 ShouldWarnOnDelete = chkWarnOnDelete.Checked,
+                ShouldLogDebug = chkLogOutput.Checked,
                 FileExtensions = txtFileExtensions.Text.Trim().Split(ExtensionSeparators.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList()
             };
             syncConfig.Save();
@@ -78,6 +79,7 @@ namespace MediaSync
             txtFileExtensions.Text = string.Join(" ", syncConfig.FileExtensions);
             chkDeleteSourceAfterCopy.Checked = syncConfig.ShouldDeleteSourceWhenSuccessfullyCompleted;
             chkWarnOnDelete.Checked = syncConfig.ShouldWarnOnDelete;
+            chkLogOutput.Checked = syncConfig.ShouldLogDebug;
         }
 
         /// <summary>
@@ -178,7 +180,6 @@ namespace MediaSync
             DirectoryInfo d = new DirectoryInfo(basePath);
             return d.FullName;
         }
-
 
         public IEnumerable<string> ReplacementTokens(string input)
         {

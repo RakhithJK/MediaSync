@@ -15,7 +15,7 @@ namespace MediaSync
 
         public bool ShouldDeleteSourceWhenSuccessfullyCompleted { get; set; }
         public bool ShouldWarnOnDelete { get; set; }
-
+        public bool ShouldLogDebug { get; set; }
         /// <summary>
         /// File extensions to filter for sync. When empty, sync none.
         /// </summary>
