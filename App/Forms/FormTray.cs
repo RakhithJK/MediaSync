@@ -14,6 +14,7 @@ namespace MediaSync
     public partial class FormTray : Form
     {
         public FileIOHelper FileHelper { get; set; }
+        public DateTime? LastRunOn { get; set; }
         public FormTray()
         {
             InitializeComponent();
@@ -36,6 +37,15 @@ namespace MediaSync
         public void ConfigChangedEvent(object sender, EventArgs e)
         {
             SetSyncCommandEnabledIfConfigValid();
+        }
+
+        public void SetLastRun()
+        {
+            lastRunToolStripMenuItem.Visible = LastRunOn.HasValue;
+            if (LastRunOn.HasValue)
+            {
+                lastRunToolStripMenuItem.Text = "Last synced was {0}".FormatWith(LastRunOn.Value.ToRelativeDateString());
+            }
         }
 
         private void syncNowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -133,6 +143,7 @@ namespace MediaSync
             try
             {
                 ShowBalloon("Finding items...");
+                LastRunOn = DateTime.Now;
                 stopwatch.Start();
                 var fileSync = new FileSyncer(syncConfig);
                 var copyResult = new SyncCopyResult();
@@ -150,7 +161,7 @@ namespace MediaSync
                 }
                 stopwatch.Stop();
                 copyResult.TimeElapsedMsg = "Total sync time was {0}:{1}".FormatWith(
-                    stopwatch.Elapsed.Minutes.ToString("00"), 
+                    stopwatch.Elapsed.Minutes.ToString("00"),
                     stopwatch.Elapsed.Seconds.ToString("00"));
                 if (shouldLog) { await FileHelper.WriteToErrLogAsync(copyResult.TimeElapsedMsg); }
 
@@ -247,6 +258,16 @@ namespace MediaSync
         {
             FormAbout about = new FormAbout();
             about.Show();
+        }
+
+        private void lastRunToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowBalloon("");
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SetLastRun();
         }
     }
 }

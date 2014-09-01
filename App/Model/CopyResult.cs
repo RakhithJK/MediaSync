@@ -7,5 +7,7 @@ namespace MediaSync.Model
         public int AlreadyExistedCount { get; set; }
         public int CopiedButAlreadyExistedDiffSizeCount { get; set; }
         public int UncopiedProblemCount { get; set; }
+
+        public string TimeElapsedMsg { get; set; }
     }
 }
