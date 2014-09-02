@@ -44,7 +44,11 @@ namespace MediaSync
             lastRunToolStripMenuItem.Visible = LastRunOn.HasValue;
             if (LastRunOn.HasValue)
             {
-                lastRunToolStripMenuItem.Text = "Last synced was {0}".FormatWith(LastRunOn.Value.ToRelativeDateString());
+                string lastNotify = "Last sync was {0}".FormatWith(LastRunOn.Value.ToRelativeDateString());
+                notifyIcon1.Text =  
+                    lastRunToolStripMenuItem.Text = lastNotify;
+                
+
             }
         }
 
@@ -64,7 +68,7 @@ namespace MediaSync
                 {
                     await Sync(syncConfig);
                     System.Media.SystemSounds.Hand.Play();
-
+                    SetLastRun();
                 });
             }
         }
@@ -126,6 +130,11 @@ namespace MediaSync
                 return null;
             }
             return syncConfig;
+        }
+
+        private void sysTrayIcon_MouseMove(object sender, MouseEventArgs e)
+        {
+            SetLastRun();
         }
 
 

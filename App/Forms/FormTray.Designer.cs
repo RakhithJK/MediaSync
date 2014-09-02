@@ -32,11 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTray));
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.lastRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.syncNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lastRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,8 +44,8 @@
             // 
             this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "Media Sync";
             this.notifyIcon1.Visible = true;
+            this.notifyIcon1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.sysTrayIcon_MouseMove);
             // 
             // contextMenuStrip1
             // 
@@ -59,40 +59,40 @@
             this.contextMenuStrip1.Size = new System.Drawing.Size(128, 114);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
+            // lastRunToolStripMenuItem
+            // 
+            this.lastRunToolStripMenuItem.Name = "lastRunToolStripMenuItem";
+            this.lastRunToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.lastRunToolStripMenuItem.Text = "LastRun";
+            this.lastRunToolStripMenuItem.Click += new System.EventHandler(this.lastRunToolStripMenuItem_Click);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.optionsToolStripMenuItem.Text = "Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // syncNowToolStripMenuItem
             // 
             this.syncNowToolStripMenuItem.Name = "syncNowToolStripMenuItem";
-            this.syncNowToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.syncNowToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.syncNowToolStripMenuItem.Text = "Sync Now";
             this.syncNowToolStripMenuItem.Click += new System.EventHandler(this.syncNowToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
-            // 
-            // lastRunToolStripMenuItem
-            // 
-            this.lastRunToolStripMenuItem.Name = "lastRunToolStripMenuItem";
-            this.lastRunToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.lastRunToolStripMenuItem.Text = "LastRun";
-            this.lastRunToolStripMenuItem.Click += new System.EventHandler(this.lastRunToolStripMenuItem_Click);
             // 
             // FormTray
             // 
