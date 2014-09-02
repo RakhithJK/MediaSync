@@ -46,9 +46,7 @@ namespace MediaSync
             {
                 string lastNotify = "Last sync was {0}".FormatWith(LastRunOn.Value.ToRelativeDateString());
                 notifyIcon1.Text =  
-                    lastRunToolStripMenuItem.Text = lastNotify;
-                
-
+                    lastRunToolStripMenuItem.Text = lastNotify;                
             }
         }
 
@@ -72,10 +70,7 @@ namespace MediaSync
                 });
             }
         }
-
-        /// <summary>
-        /// Check the 
-        /// </summary>
+     
         private void SetSyncCommandEnabledIfConfigValid()
         {
             var syncConfig = SyncConfig.CreateFromFile();
@@ -137,7 +132,6 @@ namespace MediaSync
             SetLastRun();
         }
 
-
         private async Task Sync(SyncConfig syncConfig)
         {
             bool shouldLog = syncConfig.ShouldLogDebug;
@@ -153,6 +147,7 @@ namespace MediaSync
             {
                 ShowBalloon("Finding items...");
                 LastRunOn = DateTime.Now;
+                lastRunToolStripMenuItem.Text = "Syncing.";
                 stopwatch.Start();
                 var fileSync = new FileSyncer(syncConfig);
                 var copyResult = new SyncCopyResult();
